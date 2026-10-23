@@ -451,6 +451,11 @@
     $("#displayName").value = settings.displayName || "";
     renderMessages();
     renderMemories();
+    function quickAsk(text) {
+  const prompt = document.getElementById("prompt");
+  prompt.value = text;
+  prompt.focus();
+}
   </script>
 </body>
 </html>

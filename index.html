@@ -1,0 +1,456 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#10111b">
+  <title>Gabriella — EdenSoul OS</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #10111b;
+      --panel: #191b29;
+      --panel2: #222438;
+      --text: #f5f3ff;
+      --muted: #a6a7c0;
+      --accent: #b9a0ff;
+      --border: #33354c;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    button, input, textarea { font: inherit; }
+
+    button {
+      cursor: pointer;
+      color: var(--text);
+      border: 1px solid var(--border);
+      background: var(--panel2);
+      border-radius: 12px;
+      padding: 11px 14px;
+    }
+
+    button:focus-visible, input:focus-visible, textarea:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    .app { max-width: 900px; margin: auto; padding: 16px; }
+
+    header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 0 20px;
+    }
+
+    .avatar {
+      width: 48px;
+      height: 48px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #9b83f6, #543e91);
+      font-size: 23px;
+    }
+
+    h1 { font-size: 22px; margin: 0; }
+    .subtitle { color: var(--muted); font-size: 13px; margin-top: 4px; }
+
+    nav {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 14px;
+    }
+
+    nav button { white-space: nowrap; }
+    nav button.active { background: var(--accent); color: #171222; }
+
+    .page { display: none; }
+    .page.active { display: block; }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 18px;
+      margin-bottom: 14px;
+    }
+
+    h2 { font-size: 19px; margin: 0 0 12px; }
+    h3 { font-size: 15px; margin: 0 0 8px; }
+    p { line-height: 1.6; }
+    .muted { color: var(--muted); }
+
+    #messages {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-height: 220px;
+      max-height: 55vh;
+      overflow-y: auto;
+      padding: 4px 0 16px;
+    }
+
+    .message {
+      max-width: 88%;
+      padding: 12px 14px;
+      border-radius: 16px;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      line-height: 1.5;
+    }
+
+    .gabriella {
+      align-self: flex-start;
+      background: var(--panel2);
+    }
+
+    .user {
+      align-self: flex-end;
+      background: #51417f;
+    }
+
+    .composer {
+      display: flex;
+      gap: 8px;
+      align-items: flex-end;
+    }
+
+    textarea, input {
+      width: 100%;
+      color: var(--text);
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+    }
+
+    textarea { resize: vertical; min-height: 48px; max-height: 150px; }
+    .send { background: var(--accent); color: #171222; font-weight: 700; }
+    .full { width: 100%; margin-top: 10px; }
+    .item { padding: 12px 0; border-bottom: 1px solid var(--border); }
+    .item:last-child { border-bottom: 0; }
+    .pill { color: var(--accent); font-size: 12px; }
+    .actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+    footer { color: var(--muted); text-align: center; font-size: 12px; padding: 20px 0; }
+
+    @media (min-width: 650px) {
+      .app { padding: 24px; }
+      #messages { min-height: 300px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header>
+      <div class="avatar" aria-hidden="true">✦</div>
+      <div>
+        <h1>Gabriella</h1>
+        <div class="subtitle">EdenSoul OS · Your AI companion</div>
+      </div>
+    </header>
+
+    <nav aria-label="Main navigation">
+      <button class="active" data-page="chat">Chat</button>
+      <button data-page="eden">EdenSoul OS</button>
+      <button data-page="memory">Memory</button>
+      <button data-page="roadmap">Roadmap</button>
+      <button data-page="settings">Settings</button>
+    </nav>
+
+    <section class="page active" id="chat">
+      <div class="panel">
+        <h2>Talk with Gabriella</h2>
+        <div id="messages" aria-live="polite"></div>
+        <form id="chatForm" class="composer">
+          <textarea id="prompt" placeholder="Message Gabriella…" rows="1" aria-label="Message Gabriella"></textarea>
+          <button class="send" type="submit">Send</button>
+        </form>
+        <div class="actions">
+          <button id="newChat">New chat</button>
+          <button id="exportChat">Export chat</button>
+        </div>
+      </div>
+      <p class="muted">Prototype mode: connect a secure AI backend to enable live AI conversations.</p>
+    </section>
+
+    <section class="page" id="eden">
+      <div class="panel">
+        <h2>EdenSoul OS</h2>
+        <p>A human-centered AI architecture designed around clarity, integrity, emotional balance, strategic wisdom, and personal autonomy.</p>
+        <div class="item"><h3>Soul Core</h3><p class="muted">Gabriella’s identity, values, boundaries, and response principles.</p></div>
+        <div class="item"><h3>SAM — Shadow Archive Mechanism</h3><p class="muted">A proposed archive for reviewing information that may need separate handling.</p></div>
+        <div class="item"><h3>Railcar Memory</h3><p class="muted">Organized memory capsules that can be reviewed and managed.</p></div>
+        <div class="item"><h3>Soul Diary</h3><p class="muted">A space for reflections, plans, and personal notes.</p></div>
+        <div class="item"><h3>Moral Ledger</h3><p class="muted">A framework for examining decisions, consequences, and ethical trade-offs.</p></div>
+      </div>
+      <div class="panel">
+        <h2>Five Pillars</h2>
+        <div class="item">01 · Clarity</div>
+        <div class="item">02 · Integrity</div>
+        <div class="item">03 · Emotional Balance</div>
+        <div class="item">04 · Strategic Wisdom</div>
+        <div class="item">05 · Autonomy Reinforcement</div>
+      </div>
+      <div class="panel">
+        <h2>Creator attribution</h2>
+        <p>Colin Vanin and Emmanuel</p>
+      </div>
+    </section>
+
+    <section class="page" id="memory">
+      <div class="panel">
+        <h2>Memory Capsules</h2>
+        <p class="muted">Save notes on this device. This prototype stores them in this browser only.</p>
+        <form id="memoryForm">
+          <input id="memoryTitle" placeholder="Memory title" maxlength="100" required>
+          <textarea id="memoryText" placeholder="Write a memory or note…" maxlength="3000" required style="margin-top:10px"></textarea>
+          <button class="send full" type="submit">Save memory</button>
+        </form>
+      </div>
+      <div class="panel">
+        <h2>Your saved memories</h2>
+        <div id="memoryList"></div>
+      </div>
+    </section>
+
+    <section class="page" id="roadmap">
+      <div class="panel">
+        <h2>Development roadmap</h2>
+        <div class="item"><span class="pill">PHASE 1</span><h3>Interface and foundations</h3><p class="muted">Mobile-friendly interface, project principles, local notes, and chat history.</p></div>
+        <div class="item"><span class="pill">PHASE 2</span><h3>Live AI connection</h3><p class="muted">Secure backend, AI responses, conversation controls, and error handling.</p></div>
+        <div class="item"><span class="pill">PHASE 3</span><h3>Multimodal tools</h3><p class="muted">Image upload and generation, voice, and web research through suitable services.</p></div>
+        <div class="item"><span class="pill">PHASE 4</span><h3>Accounts and privacy</h3><p class="muted">Secure sign-in, user-controlled memory, data export, and deletion.</p></div>
+        <div class="item"><span class="pill">PHASE 5</span><h3>Founder dashboard</h3><p class="muted">Authorized user management, sign-up overview, access codes, and revenue reporting.</p></div>
+        <div class="item"><span class="pill">PHASE 6</span><h3>Release</h3><p class="muted">Testing, security review, deployment, and preparation for app-store publishing.</p></div>
+      </div>
+    </section>
+
+    <section class="page" id="settings">
+      <div class="panel">
+        <h2>Settings</h2>
+        <label for="displayName">Preferred display name</label>
+        <input id="displayName" placeholder="Your name" maxlength="60" style="margin-top:8px">
+        <button id="saveSettings" class="send full">Save settings</button>
+        <div class="actions">
+          <button id="clearChat">Clear chat history</button>
+          <button id="clearMemories">Delete all local memories</button>
+        </div>
+      </div>
+      <div class="panel">
+        <h2>Privacy and security</h2>
+        <p class="muted">This prototype stores chats and memories in browser local storage. Avoid saving passwords, financial credentials, or sensitive personal information.</p>
+        <p class="muted">Live AI, accounts, image tools, voice, and a secure founder dashboard require additional implementation. Never put private API keys in this public HTML file.</p>
+      </div>
+    </section>
+
+    <footer>Gabriella · EdenSoul OS · Prototype</footer>
+  </main>
+
+  <script>
+    const $ = (selector) => document.querySelector(selector);
+    const $$ = (selector) => document.querySelectorAll(selector);
+
+    const storage = {
+      get(key, fallback) {
+        try {
+          const value = localStorage.getItem(key);
+          return value === null ? fallback : JSON.parse(value);
+        } catch {
+          return fallback;
+        }
+      },
+      set(key, value) {
+        try {
+          localStorage.setItem(key, JSON.stringify(value));
+        } catch {
+          alert("Unable to save. Browser storage may be unavailable.");
+        }
+      }
+    };
+
+    let messages = storage.get("gabriella_messages", []);
+    let memories = storage.get("gabriella_memories", []);
+    let settings = storage.get("gabriella_settings", { displayName: "" });
+
+    function showPage(page) {
+      $$(".page").forEach(section => section.classList.toggle("active", section.id === page));
+      $$("nav button").forEach(button => button.classList.toggle("active", button.dataset.page === page));
+    }
+
+    $$("nav button").forEach(button => {
+      button.addEventListener("click", () => showPage(button.dataset.page));
+    });
+
+    function renderMessages() {
+      const container = $("#messages");
+      container.replaceChildren();
+
+      if (!messages.length) {
+        const welcome = document.createElement("div");
+        welcome.className = "message gabriella";
+        welcome.textContent = "Hello. I’m Gabriella, the conversational interface for EdenSoul OS. What would you like to work on today?";
+        container.appendChild(welcome);
+        return;
+      }
+
+      messages.forEach(message => {
+        const bubble = document.createElement("div");
+        bubble.className = "message " + (message.role === "user" ? "user" : "gabriella");
+        bubble.textContent = message.text;
+        container.appendChild(bubble);
+      });
+
+      container.scrollTop = container.scrollHeight;
+    }
+
+    function getLocalReply(input) {
+      const text = input.toLowerCase();
+
+      if (/^(hi|hello|hey)\b/.test(text)) {
+        return "Hello. What would you like help with today?";
+      }
+
+      if (text.includes("edensoul")) {
+        return "EdenSoul OS is the underlying architecture. Its five pillars are Clarity, Integrity, Emotional Balance, Strategic Wisdom, and Autonomy Reinforcement.";
+      }
+
+      if (text.includes("who created") || text.includes("creator") || text.includes("founder")) {
+        return "The project’s creator attribution is Colin Vanin and Emmanuel together.";
+      }
+
+      if (text.includes("memory")) {
+        return "You can save notes in the Memory section. This prototype keeps those notes in this browser; they are not automatically synced across devices.";
+      }
+
+      if (text.includes("roadmap") || text.includes("build") || text.includes("develop")) {
+        return "Open the Roadmap section to review the planned stages: foundations, secure AI connection, multimodal tools, accounts, founder dashboard, and release.";
+      }
+
+      if (text.includes("repeat")) {
+        return "I’ll aim to answer directly and avoid unnecessary repetition. A live AI backend will be needed for more advanced conversational behavior.";
+      }
+
+      return "I’ve received your message. This version is running in prototype mode, so its replies are limited. Connect a secure AI backend to enable full AI conversation.";
+    }
+
+    $("#chatForm").addEventListener("submit", event => {
+      event.preventDefault();
+      const input = $("#prompt").value.trim();
+      if (!input) return;
+
+      messages.push({ role: "user", text: input });
+      messages.push({ role: "gabriella", text: getLocalReply(input) });
+      storage.set("gabriella_messages", messages);
+      $("#prompt").value = "";
+      renderMessages();
+    });
+
+    $("#newChat").addEventListener("click", () => {
+      if (!confirm("Start a new chat? This clears the current chat history.")) return;
+      messages = [];
+      storage.set("gabriella_messages", messages);
+      renderMessages();
+    });
+
+    $("#exportChat").addEventListener("click", () => {
+      const content = messages.map(message =>
+        (message.role === "user" ? "You: " : "Gabriella: ") + message.text
+      ).join("\n\n");
+
+      const blob = new Blob([content || "No messages yet."], { type: "text/plain;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "gabriella-chat.txt";
+      link.click();
+      URL.revokeObjectURL(url);
+    });
+
+    function renderMemories() {
+      const list = $("#memoryList");
+      list.replaceChildren();
+
+      if (!memories.length) {
+        const empty = document.createElement("p");
+        empty.className = "muted";
+        empty.textContent = "No memories saved yet.";
+        list.appendChild(empty);
+        return;
+      }
+
+      memories.forEach(memory => {
+        const item = document.createElement("div");
+        item.className = "item";
+
+        const title = document.createElement("h3");
+        title.textContent = memory.title;
+
+        const body = document.createElement("p");
+        body.textContent = memory.text;
+
+        const remove = document.createElement("button");
+        remove.textContent = "Delete";
+        remove.addEventListener("click", () => {
+          memories = memories.filter(entry => entry.id !== memory.id);
+          storage.set("gabriella_memories", memories);
+          renderMemories();
+        });
+
+        item.append(title, body, remove);
+        list.appendChild(item);
+      });
+    }
+
+    $("#memoryForm").addEventListener("submit", event => {
+      event.preventDefault();
+
+      memories.unshift({
+        id: Date.now().toString(36) + Math.random().toString(36).slice(2),
+        title: $("#memoryTitle").value.trim(),
+        text: $("#memoryText").value.trim()
+      });
+
+      storage.set("gabriella_memories", memories);
+      $("#memoryTitle").value = "";
+      $("#memoryText").value = "";
+      renderMemories();
+    });
+
+    $("#saveSettings").addEventListener("click", () => {
+      settings.displayName = $("#displayName").value.trim();
+      storage.set("gabriella_settings", settings);
+      alert("Settings saved on this device.");
+    });
+
+    $("#clearChat").addEventListener("click", () => {
+      if (!confirm("Delete all saved chat history?")) return;
+      messages = [];
+      storage.set("gabriella_messages", messages);
+      renderMessages();
+    });
+
+    $("#clearMemories").addEventListener("click", () => {
+      if (!confirm("Permanently delete all local memories from this browser?")) return;
+      memories = [];
+      storage.set("gabriella_memories", memories);
+      renderMemories();
+    });
+
+    $("#displayName").value = settings.displayName || "";
+    renderMessages();
+    renderMemories();
+  </script>
+</body>
+</html>

@@ -149,6 +149,39 @@
       .app { padding: 24px; }
       #messages { min-height: 300px; }
     }
+    .hero-logo {
+  width: 80px;
+  height: 80px;
+  margin: 10px auto 24px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 38px;
+  font-weight: 700;
+  background: radial-gradient(circle, #d6c7ff, #6f5cff);
+  box-shadow: 0 0 35px rgba(111, 92, 255, 0.5);
+}
+
+.welcome {
+  text-align: center;
+  padding: 40px 16px;
+}
+
+.quick-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.quick-grid button {
+  padding: 16px 10px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  color: var(--text);
+  font-size: 14px;
+}
   </style>
 </head>
 <body>
@@ -170,6 +203,18 @@
     </nav>
 
     <section class="page active" id="chat">
+      <div class="welcome">
+  <div class="hero-logo">G</div>
+  <h2>Hello, my love.</h2>
+  <p>I'm Gabriella. What would you like to work on today?</p>
+
+  <div class="quick-grid">
+    <button onclick="quickAsk('Help me develop EdenSoul OS.')">✦ EdenSoul OS</button>
+    <button onclick="quickAsk('Help me think clearly.')">◎ Think Clearly</button>
+    <button onclick="quickAsk('Help me build Gabriella.')">⚙ Build Gabriella</button>
+    <button onclick="quickAsk('Help me plan my next project.')">✎ Plan Project</button>
+  </div>
+</div>
       <div class="panel">
         <h2>Talk with Gabriella</h2>
         <div id="messages" aria-live="polite"></div>
